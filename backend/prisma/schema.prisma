@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Tipo {
+  id     Int      @id @default(autoincrement())
+  nombre String   @db.VarChar(50)
+  Animal Animal[]
+}
+
+model Talla {
+  id     Int      @id @default(autoincrement())
+  nombre String   @db.VarChar(50)
+  Animal Animal[]
+}
+
+model Animal {
+  id              Int      @id @default(autoincrement())
+  tipoId          Int
+  nombre          String   @db.VarChar(50)
+  fechaNacimiento DateTime @db.Date
+  tallaId         Int
+  sexo            String   @db.VarChar(3)
+  raza            String?
+  descripcion     String?
+  fotos           Foto[]
+  tipo            Tipo     @relation(fields: [tipoId], references: [id])
+  talla           Talla    @relation(fields: [tallaId], references: [id])
+}
+
+model Foto {
+  id       Int    @id @default(autoincrement())
+  animalId Int
+  url      String @db.VarChar(250)
+  animal   Animal @relation(fields: [animalId], references: [id])
+}
